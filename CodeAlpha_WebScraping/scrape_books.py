@@ -23,9 +23,7 @@ from bs4 import BeautifulSoup
 BASE_URL = "https://books.toscrape.com/"
 CATALOGUE_URL = BASE_URL + "catalogue/"
 
-RATING_WORD_TO_NUM = {
-    "One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5
-}
+RATING_WORD_TO_NUM = {"One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
 
 logging.basicConfig(
     level=logging.INFO,
@@ -78,9 +76,7 @@ def parse_book_card(session: requests.Session, card, fetch_category: bool = True
     in_stock_count = None
     if "(" in availability_text:
         try:
-            in_stock_count = int(
-                availability_text.split("(")[1].split()[0]
-            )
+            in_stock_count = int(availability_text.split("(")[1].split()[0])
         except (IndexError, ValueError):
             in_stock_count = None
 
@@ -147,12 +143,18 @@ def save_to_csv(books: List[Book], out_path: str) -> None:
 
 def main():
     parser = argparse.ArgumentParser(description="Scrape books.toscrape.com into a CSV file.")
-    parser.add_argument("--max-pages", type=int, default=None,
-                         help="Limit number of catalogue pages to scrape (default: all ~50 pages).")
-    parser.add_argument("--skip-category", action="store_true",
-                         help="Skip visiting each product page for category (much faster, less complete).")
-    parser.add_argument("--out", type=str, default="books.csv",
-                         help="Output CSV file path.")
+    parser.add_argument(
+        "--max-pages",
+        type=int,
+        default=None,
+        help="Limit number of catalogue pages to scrape (default: all ~50 pages).",
+    )
+    parser.add_argument(
+        "--skip-category",
+        action="store_true",
+        help="Skip visiting each product page for category (much faster, less complete).",
+    )
+    parser.add_argument("--out", type=str, default="books.csv", help="Output CSV file path.")
     args = parser.parse_args()
 
     books = scrape_all_books(max_pages=args.max_pages, fetch_category=not args.skip_category)

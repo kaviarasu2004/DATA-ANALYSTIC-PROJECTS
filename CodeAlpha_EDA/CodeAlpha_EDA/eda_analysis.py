@@ -12,12 +12,12 @@ Usage:
 """
 
 import argparse
-import os
+import pandas as pd
 from pathlib import Path
 
-import numpy as np
-import pandas as pd
+
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -102,7 +102,9 @@ def make_charts(df: pd.DataFrame, outdir: Path) -> None:
     # 5. Top categories
     plt.figure(figsize=(9, 5))
     top_cats = df["category"].value_counts().head(10)
-    sns.barplot(x=top_cats.values, y=top_cats.index, hue=top_cats.index, palette="mako", legend=False)
+    sns.barplot(
+        x=top_cats.values, y=top_cats.index, hue=top_cats.index, palette="mako", legend=False
+    )
     plt.title("Top 10 Categories by Number of Books")
     plt.xlabel("Number of books")
     plt.tight_layout()
@@ -110,7 +112,9 @@ def make_charts(df: pd.DataFrame, outdir: Path) -> None:
     plt.close()
 
 
-def write_report(df: pd.DataFrame, missing_df: pd.DataFrame, outliers: pd.DataFrame, outdir: Path) -> None:
+def write_report(
+    df: pd.DataFrame, missing_df: pd.DataFrame, outliers: pd.DataFrame, outdir: Path
+) -> None:
     corr = df[["price_gbp", "rating", "in_stock_count"]].corr()
     price_rating_corr = corr.loc["price_gbp", "rating"]
 
@@ -141,30 +145,41 @@ def write_report(df: pd.DataFrame, missing_df: pd.DataFrame, outliers: pd.DataFr
     lines.append("")
 
     lines.append("## 4. Outlier Detection (Price, IQR method)\n")
-    lines.append(f"Detected **{len(outliers)}** price outliers out of {len(df)} records "
-                  f"({len(outliers) / len(df) * 100:.1f}%).\n")
+    lines.append(
+        f"Detected **{len(outliers)}** price outliers out of {len(df)} records "
+        f"({len(outliers) / len(df) * 100:.1f}%).\n"
+    )
 
     lines.append("## 5. Key Findings\n")
-    lines.append(f"- The most common category is **{top_category}**, "
-                  f"with {df['category'].value_counts().max()} titles.")
+    lines.append(
+        f"- The most common category is **{top_category}**, "
+        f"with {df['category'].value_counts().max()} titles."
+    )
     lines.append(f"- Average book price is **£{avg_price:.2f}** (median £{median_price:.2f}).")
     lines.append(f"- Average star rating across the catalogue is **{avg_rating:.2f} / 5**.")
     lines.append(f"- **{out_of_stock_pct:.1f}%** of books are currently out of stock.")
-    lines.append(f"- Correlation between price and rating: **{price_rating_corr:.3f}** "
-                  f"({'weak/negligible' if abs(price_rating_corr) < 0.2 else 'moderate' if abs(price_rating_corr) < 0.5 else 'strong'}).")
+    lines.append(
+        f"- Correlation between price and rating: **{price_rating_corr:.3f}** "
+        f"({'weak/negligible' if abs(price_rating_corr) < 0.2 else 'moderate' if abs(price_rating_corr) < 0.5 else 'strong'})."
+    )
     lines.append("")
 
     lines.append("## 6. Hypothesis Validation\n")
     lines.append("**H0: Higher-rated books are not priced differently from lower-rated books.**\n")
     grouped = df.groupby("rating")["price_gbp"].mean().round(2)
     lines.append(grouped.to_frame("avg_price_gbp").to_markdown())
-    verdict = "rejected — a rating-linked price pattern is visible" if abs(price_rating_corr) >= 0.2 \
+    verdict = (
+        "rejected — a rating-linked price pattern is visible"
+        if abs(price_rating_corr) >= 0.2
         else "not rejected — price does not meaningfully depend on rating in this dataset"
+    )
     lines.append(f"\n**Verdict:** {verdict}.\n")
 
     lines.append("## 7. Charts\n")
-    lines.append("See the `charts/` folder for: `price_distribution.png`, `rating_distribution.png`, "
-                  "`price_by_rating.png`, `correlation_heatmap.png`, `top_categories.png`.\n")
+    lines.append(
+        "See the `charts/` folder for: `price_distribution.png`, `rating_distribution.png`, "
+        "`price_by_rating.png`, `correlation_heatmap.png`, `top_categories.png`.\n"
+    )
 
     outdir.mkdir(parents=True, exist_ok=True)
     with open(outdir / "report.md", "w", encoding="utf-8") as f:
