@@ -19,26 +19,26 @@
 
 |                  |   missing_count |   missing_pct |
 |:-----------------|----------------:|--------------:|
-| title            |               0 |           0   |
-| price_gbp        |               0 |           0   |
-| rating           |               0 |           0   |
-| availability     |               0 |           0   |
-| in_stock_count   |              75 |           7.5 |
-| category         |               0 |           0   |
-| product_page_url |               0 |           0   |
+| title            |               0 |             0 |
+| price_gbp        |               0 |             0 |
+| rating           |               0 |             0 |
+| availability     |               0 |             0 |
+| in_stock_count   |            1000 |           100 |
+| category         |               0 |             0 |
+| product_page_url |               0 |             0 |
 
 ## 3. Descriptive Statistics
 
 |       |   price_gbp |   rating |   in_stock_count |
 |:------|------------:|---------:|-----------------:|
-| count |     1000    |  1000    |           925    |
-| mean  |       39.85 |     3.5  |            15.43 |
-| std   |       14.73 |     1.24 |             8.64 |
-| min   |       12.24 |     1    |             1    |
-| 25%   |       27.74 |     3    |             8    |
-| 50%   |       39.4  |     4    |            15    |
-| 75%   |       52.45 |     5    |            23    |
-| max   |       70.15 |     5    |            30    |
+| count |     1000    |  1000    |                0 |
+| mean  |       35.07 |     2.92 |              nan |
+| std   |       14.45 |     1.43 |              nan |
+| min   |       10    |     1    |              nan |
+| 25%   |       22.11 |     2    |              nan |
+| 50%   |       35.98 |     3    |              nan |
+| 75%   |       47.46 |     4    |              nan |
+| max   |       59.99 |     5    |              nan |
 
 ## 4. Outlier Detection (Price, IQR method)
 
@@ -46,11 +46,11 @@ Detected **0** price outliers out of 1000 records (0.0%).
 
 ## 5. Key Findings
 
-- The most common category is **Nonfiction**, with 81 titles.
-- Average book price is **£39.85** (median £39.40).
-- Average star rating across the catalogue is **3.50 / 5**.
-- **7.5%** of books are currently out of stock.
-- Correlation between price and rating: **0.131** (weak/negligible).
+- The most common category is **Default**, with 152 titles.
+- Average book price is **£35.07** (median £35.98).
+- Average star rating across the catalogue is **2.92 / 5**.
+- **0.0%** of books are currently out of stock.
+- Correlation between price and rating: **0.028** (weak/negligible).
 
 ## 6. Hypothesis Validation
 
@@ -58,11 +58,11 @@ Detected **0** price outliers out of 1000 records (0.0%).
 
 |   rating |   avg_price_gbp |
 |---------:|----------------:|
-|        1 |           37.65 |
-|        2 |           36.21 |
-|        3 |           38.79 |
-|        4 |           40.84 |
-|        5 |           42.3  |
+|        1 |           34.56 |
+|        2 |           34.81 |
+|        3 |           34.69 |
+|        4 |           36.09 |
+|        5 |           35.37 |
 
 **Verdict:** not rejected — price does not meaningfully depend on rating in this dataset.
 
